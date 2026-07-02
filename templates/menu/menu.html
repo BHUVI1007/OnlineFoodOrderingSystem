@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Restaurant Menu</h2>
+
+<form method="GET" class="row mb-4">
+
+    <div class="col-md-4">
+        <input type="text"
+               name="q"
+               class="form-control"
+               placeholder="Search Food..."
+               value="{{ request.GET.q }}">
+    </div>
+
+    <div class="col-md-3">
+        <select name="category" class="form-select">
+
+            <option value="">All Categories</option>
+
+            {% for category in categories %}
+
+            <option value="{{ category.id }}"
+            {% if request.GET.category == category.id|stringformat:"s" %}
+                selected
+            {% endif %}>
+
+                {{ category.name }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+    </div>
+
+    <div class="col-md-3">
+
+        <select name="sort" class="form-select">
+
+            <option value="">Sort Price</option>
+
+            <option value="low"
+            {% if request.GET.sort == "low" %}
+            selected
+            {% endif %}>
+            Low to High
+            </option>
+
+            <option value="high"
+            {% if request.GET.sort == "high" %}
+            selected
+            {% endif %}>
+            High to Low
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="col-md-2">
+
+        <button class="btn btn-primary w-100">
+
+            Apply
+
+        </button>
+
+    </div>
+
+</form>
+
+<div class="row">
+
+{% for food in foods %}
+
+<div class="col-md-4 mb-4">
+
+    <div class="card shadow h-100">
+
+        <img src="{{ food.image.url }}"
+             class="card-img-top"
+             height="220">
+
+        <div class="card-body">
+
+            <h4>{{ food.name }}</h4>
+
+            <p>{{ food.description|truncatechars:70 }}</p>
+
+            <h5 class="text-success">
+                ₹ {{ food.price }}
+            </h5>
+
+            <a href="{% url 'food_detail' food.id %}"
+               class="btn btn-warning">
+
+                View Details
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% empty %}
+
+<div class="col-12">
+
+    <div class="alert alert-warning">
+
+        No food items found.
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}
