@@ -1,18 +1,15 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from cart.models import Cart
 from .models import Order, OrderItem
-from django.shortcuts import get_object_or_404
 
 
 @login_required
 def checkout(request):
-
     cart_items = Cart.objects.filter(user=request.user)
     total = sum(item.total_price for item in cart_items)
 
     if request.method == "POST":
-
         address = request.POST['address']
         phone = request.POST['phone']
 
@@ -49,7 +46,6 @@ def my_orders(request):
     })
 
 
-
 @login_required
 def order_detail(request, id):
     order = get_object_or_404(
@@ -60,9 +56,7 @@ def order_detail(request, id):
 
     items = OrderItem.objects.filter(order=order)
 
-    return render(request,
-                  'orders/order_detail.html',
-                  {
-                      'order': order,
-                      'items': items
-                  })
+    return render(request, 'orders/order_detail.html', {
+        'order': order,
+        'items': items
+    })
